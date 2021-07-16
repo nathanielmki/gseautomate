@@ -10,22 +10,54 @@ import re
 import string
 from gseapy.parser import Biomart
 
-def processID(infile, gene_symbol, delim='\t'):
+def processID(infile, outfile, delim='\t'):
+
     # Load in gene list from data frame
     df = pd.read_csv(infile, sep='\t')
-    # Reduce gene ID to gene symbol, removing ENSEMBL flag (precedes ID by a _ )
+    
+    # Set Index Name
+    #df.index.name = 'NAME'
+    df.rename(columns = {"" : "NAME"},inplace=True)
+
+    # Reduce gene ID to gene symbol, removing ENSEMBL flag (preceded ID by a _ )
     df['gene_symbol'] = df['NAME'].str.split('_').str[1]
+
     # Shift last column (gene_symbol) to be first
     cols = list(df.columns)
     cols = [cols[-1]] + cols[:-1]
     df = df[cols]
-    # Drop redundant second column containing ENSEMBL IDs and gene symbols
-    df_final = df.drop(columns=['NAME'])
-    #print(df_final)
-    df_final.to_csv(gene_symbol, sep='\t', encoding='utf-8')
-    
-    return gene_symbol
 
+    # Drop redundant second column containing ENSEMBL IDs and gene symbols
+    df_toPreRank = df.drop(columns=['NAME'])
+
+    print(df_toPreRank)
+    # df_toPreRank.to_csv(outfile, sep='\t', encoding='utf-8')
+
+    return df_toPreRank
+
+def preRank(df_toPreRank):
+    #df_toPreRank.apply(processID, axis=1, args=(df_preRank, ))
+
+    df_gene_symbol = df_toPreRank['gene_symbol']
+    print(df_gene_symbol) 
+
+    # Dump gene column as list/array
+    # Iterate from 1 to 50, dump column i
+        # Take dump of gene column and join with column i as dataframe
+        # Stack as larger dataframe with 50 objects
+        # Each object is of gene_symbol and PCi
+        # [[gene_column, PC1], [gene_column, PC2], [i, j]]
+        # nested-nested list of arrays
+
+    # Return entire [[gene_column, PC1], [gene_column, PC2], [i, j]]
+
+    # To rank, iterate over entire object
+    rnk = pd.read_csv(df_toPreRank, header=None, sep='\t')
+    print(rnk)
+
+    for index, column in rnk.iteritems():
+        print(index, column)
+        input()
 # def biomartConversion(gene_symbol, outfile, delim='\t'):
 #     df = pd.read_csv(gene_symbol, sep='\t')
 #     bm = Biomart()
@@ -77,11 +109,13 @@ def main():
 
     infile, outfile = inputVerification(parser.parse_args())
 
-    gene_symbol = processID(gene_symbol)
+    #gene_symbol = processID(gene_symbol)
 
-    processID(infile, gene_symbol)
+    df_toPreRank = processID(infile, outfile)
 
-    biomartConversion(gene_symbol, outfile)
+    preRank(df_toPreRank)
+
+    #biomartConversion(gene_symbol, outfile)
 
 
 if __name__ == '__main__':
