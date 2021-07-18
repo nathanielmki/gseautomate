@@ -38,11 +38,13 @@ def processID(infile, outfile, delim='\t'):
 def preRank(df_toPreRank):
     #df_toPreRank.apply(processID, axis=1, args=(df_preRank, ))
 
-    df_gene_symbol = df_toPreRank['gene_symbol']
-    print(df_gene_symbol) 
-
     # Dump gene column as list/array
+    df_gene_symbol = df_toPreRank['gene_symbol']
+    print(df_gene_symbol)
+
     # Iterate from 1 to 50, dump column i
+    for col in df_toPreRank.columns[1:]:
+        print(df_toPreRank)
         # Take dump of gene column and join with column i as dataframe
         # Stack as larger dataframe with 50 objects
         # Each object is of gene_symbol and PCi
@@ -52,12 +54,13 @@ def preRank(df_toPreRank):
     # Return entire [[gene_column, PC1], [gene_column, PC2], [i, j]]
 
     # To rank, iterate over entire object
-    rnk = pd.read_csv(df_toPreRank, header=None, sep='\t')
-    print(rnk)
+    #rnk = pd.read_csv(df_toPreRank, header=None, sep='\t')
+    #print(rnk)
 
-    for index, column in rnk.iteritems():
-        print(index, column)
-        input()
+    #for index, column in rnk.iteritems():
+        #print(index, column)
+        #input()
+
 # def biomartConversion(gene_symbol, outfile, delim='\t'):
 #     df = pd.read_csv(gene_symbol, sep='\t')
 #     bm = Biomart()
@@ -109,13 +112,9 @@ def main():
 
     infile, outfile = inputVerification(parser.parse_args())
 
-    #gene_symbol = processID(gene_symbol)
-
     df_toPreRank = processID(infile, outfile)
 
     preRank(df_toPreRank)
-
-    #biomartConversion(gene_symbol, outfile)
 
 
 if __name__ == '__main__':
