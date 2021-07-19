@@ -46,25 +46,25 @@ def preRank(df_toPreRank):
     # Return entire [[gene_column, PC1], [gene_column, PC2], [i, j]]
 
     # TODO: Update for loop to work with user input for PC limit
-
-    for col in df_toPreRank.columns[1:11]:
+    pc_limit = 11
+    frames = []
+    for col in df_toPreRank.columns[1:pc_limit]:
         df_pc = df_toPreRank[col]
-        frames = pd.concat([df_gene_symbol, df_pc], axis=1, join='inner')
-
+        frames.append(pd.concat([df_gene_symbol, df_pc], axis=1, join='inner'))
         # TODO: Remove duplicate gene names from frames, keep only highest value gene
 
-        #frames.rename(columns=frames.iloc[0]).drop(frames.index[0])
-        #print(reduced)
+        # frames.rename(columns=frames.iloc[0]).drop(frames.index[0])
+        # print(reduced)
 
     # To rank, iterate over entire object
-        for frame in frames:
-            # TODO: Strip header in preparation for Prerank submission
-            rnk = frames
-            print(rnk)
-            # TODO: write to new folder for each PC (output is being overwritten)
-            pre_res = gp.prerank(rnk=rnk, gene_sets='KEGG_2016', processes=4,
-                             permutation_num=100, outdir='test/prerank_report_kegg', format='png', seed=6)
-            print(pre_res)
+    for frame in frames:
+        # TODO: Strip header in preparation for Prerank submission
+        rnk = frame
+        print(rnk)
+    #     # TODO: write to new folder for each PC (output is being overwritten)
+        pre_res = gp.prerank(rnk=rnk, gene_sets='Reactome_2016', processes=4,
+                             permutation_num=100, outdir='test/prerank_reactome', format='png', seed=6)
+        print(pre_res)
     return(pre_res)
 
     # df_pc = df_toPreRank.iloc[:,[0,1]]
@@ -77,7 +77,10 @@ def preRank(df_toPreRank):
     #     split_df.append(df_toPreRank.iloc[:, [i,i+1]])
     #     print(split_df)
 
-# def biomartConversion(gene_symbol, outfile, delim='\t'):
+    # Convert input ENSEMBL IDs to NCBI Entrez gene IDs
+
+
+# def biomartConversion(gene_symbol, delim='\t'):
 #     df = pd.read_csv(gene_symbol, sep='\t')
 #     bm = Biomart()
 #     # View validated marts
@@ -90,11 +93,11 @@ def preRank(df_toPreRank):
 #     filters = bm.get_filters(dataset='drerio_gene_ensembl')
 #     # Pull out column 1 as list to feed to Biomart
 #     col_one_list = df['NAME'].tolist()
-#     #print(col_one_list)
+#     # print(col_one_list)
 #     # Query results
 #     queries = col_one_list
 #     results = bm.query(dataset='drerio_gene_ensembl', attributes=['ensembl_gene_id', 'external_gene_name', 'entrezgene_id', 'go_id'],
-#                         filters={'ensemble_gene_id': queries})
+#                        filters={'ensemble_gene_id': queries})
 #     #results.to_csv(outfile, sep='\t', encoding='utf-8')
 #     print(results)
 
@@ -127,7 +130,7 @@ def main():
     parser.add_argument("-o", "--outfile", dest="outfile",
                         help="Output filename, should end in '.biomart.txt'")
     # TODO: Implement this feature
-    parser.add_argument("-pc", "--pclimit",
+    parser.add_argument("-pc", "--pclimit", dest="pclimit",
                         help="Number of PCs to work with", type=int)
 
     infile, outfile = inputVerification(parser.parse_args())
