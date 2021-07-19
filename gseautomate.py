@@ -34,22 +34,35 @@ def processID(infile, outfile, delim='\t'):
 
 def preRank(df_toPreRank):
 
-    # Dump gene column as list/array (use .tolist(), may be
-    # easier to keep as df)
+    # Dump gene column as Dataframe
     df_gene_symbol = df_toPreRank['gene_symbol']
 
     # Iterate from 1 to n, dump column i
+    # Take dump of gene column and join with column i as dataframe
+    # Stack as larger dataframe with n objects
+    # Each object is of gene_symbol and PCi
+    # [[gene_column, PC1], [gene_column, PC2], [i, j]]
+    # nested-nested list of arrays
+    # Return entire [[gene_column, PC1], [gene_column, PC2], [i, j]]
+
     # TODO: Update for loop to work with user input for PC limit
 
     for col in df_toPreRank.columns[1:11]:
         df_pc = df_toPreRank[col]
-        #print(pc_df)
         frames = pd.concat([df_gene_symbol, df_pc], axis=1, join='inner')
-        print(frames)
-        # if 'PC' in col:
+        #frames.rename(columns=frames.iloc[0]).drop(frames.index[0])
+        #print(reduced)
 
-    # for ind, column in enumerate(df_toPreRank.columns[1:11]):
-        #print(ind, column)
+    # To rank, iterate over entire object
+        for frame in frames:
+            #TODO: Strip header in preparation for Prerank submission
+            rnk = frames
+            print(rnk)
+
+            pre_res = gp.prerank(rnk=rnk, gene_sets='KEGG_2016', processes=4,
+                             permutation_num=100, outdir='test/prerank_report_kegg', format='png', seed=6)
+            print(pre_res)
+        return(pre_res)
 
     # df_pc = df_toPreRank.iloc[:,[0,1]]
     # col_num = len(df_toPreRank.columns[1:])
@@ -60,22 +73,6 @@ def preRank(df_toPreRank):
     # for i in range(0, col_num, 1):
     #     split_df.append(df_toPreRank.iloc[:, [i,i+1]])
     #     print(split_df)
-
-        # Take dump of gene column and join with column i as dataframe
-        # Stack as larger dataframe with n objects
-        # Each object is of gene_symbol and PCi
-        # [[gene_column, PC1], [gene_column, PC2], [i, j]]
-        # nested-nested list of arrays
-
-    # Return entire [[gene_column, PC1], [gene_column, PC2], [i, j]]
-
-    # To rank, iterate over entire object
-    #rnk = pd.read_csv(df_toPreRank, header=None, sep='\t')
-    # print(rnk)
-
-    # for index, column in rnk.iteritems():
-        #print(index, column)
-        # input()
 
 # def biomartConversion(gene_symbol, outfile, delim='\t'):
 #     df = pd.read_csv(gene_symbol, sep='\t')
