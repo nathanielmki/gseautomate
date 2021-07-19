@@ -34,15 +34,22 @@ def processID(infile, outfile, delim='\t'):
 
 def preRank(df_toPreRank):
 
-    # Dump gene column as list/array
+    # Dump gene column as list/array (use .tolist(), may be
+    # easier to keep as df)
     df_gene_symbol = df_toPreRank['gene_symbol']
 
     # Iterate from 1 to n, dump column i
     # TODO: Update for loop to work with user input for PC limit
 
     for col in df_toPreRank.columns[1:11]:
-        print(df_toPreRank[col])
+        df_pc = df_toPreRank[col]
+        #print(pc_df)
+        frames = pd.concat([df_gene_symbol, df_pc], axis=1, join='inner')
+        print(frames)
         # if 'PC' in col:
+
+    # for ind, column in enumerate(df_toPreRank.columns[1:11]):
+        #print(ind, column)
 
     # df_pc = df_toPreRank.iloc[:,[0,1]]
     # col_num = len(df_toPreRank.columns[1:])
@@ -53,8 +60,9 @@ def preRank(df_toPreRank):
     # for i in range(0, col_num, 1):
     #     split_df.append(df_toPreRank.iloc[:, [i,i+1]])
     #     print(split_df)
+
         # Take dump of gene column and join with column i as dataframe
-        # Stack as larger dataframe with 50 objects
+        # Stack as larger dataframe with n objects
         # Each object is of gene_symbol and PCi
         # [[gene_column, PC1], [gene_column, PC2], [i, j]]
         # nested-nested list of arrays
@@ -118,7 +126,7 @@ def main():
 
     parser.add_argument("-o", "--outfile", dest="outfile",
                         help="Output filename, should end in '.biomart.txt'")
-    
+    # TODO: Implement this feature
     parser.add_argument("-pc", "--pclimit",
                         help="Number of PCs to work with", type=int)
 
