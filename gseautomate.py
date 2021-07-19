@@ -62,7 +62,7 @@ def preRank(df_toPreRank):
             pre_res = gp.prerank(rnk=rnk, gene_sets='KEGG_2016', processes=4,
                              permutation_num=100, outdir='test/prerank_report_kegg', format='png', seed=6)
             print(pre_res)
-        return(pre_res)
+    return(pre_res)
 
     # df_pc = df_toPreRank.iloc[:,[0,1]]
     # col_num = len(df_toPreRank.columns[1:])
