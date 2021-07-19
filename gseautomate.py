@@ -10,14 +10,14 @@ import re
 import string
 from gseapy.parser import Biomart
 
+
 def processID(infile, outfile, delim='\t'):
 
     # Load in gene list from data frame
     df = pd.read_csv(infile, sep='\t')
-    
+
     # Set Index Name
-    #df.index.name = 'NAME'
-    df.rename(columns = {"" : "NAME"},inplace=True)
+    df.rename(columns={"": "NAME"}, inplace=True)
 
     # Reduce gene ID to gene symbol, removing ENSEMBL flag (preceded ID by a _ )
     df['gene_symbol'] = df['NAME'].str.split('_').str[1]
@@ -29,22 +29,30 @@ def processID(infile, outfile, delim='\t'):
 
     # Drop redundant second column containing ENSEMBL IDs and gene symbols
     df_toPreRank = df.drop(columns=['NAME'])
-
-    print(df_toPreRank)
-    # df_toPreRank.to_csv(outfile, sep='\t', encoding='utf-8')
-
     return df_toPreRank
 
+
 def preRank(df_toPreRank):
-    #df_toPreRank.apply(processID, axis=1, args=(df_preRank, ))
 
     # Dump gene column as list/array
     df_gene_symbol = df_toPreRank['gene_symbol']
-    print(df_gene_symbol)
 
-    # Iterate from 1 to 50, dump column i
-    for col in df_toPreRank.columns[1:]:
-        print(df_toPreRank)
+    # Iterate from 1 to n, dump column i
+    # TODO: Update for loop to work with user input for PC limit
+
+    for col in df_toPreRank.columns[1:11]:
+        print(df_toPreRank[col])
+        # if 'PC' in col:
+
+    # df_pc = df_toPreRank.iloc[:,[0,1]]
+    # col_num = len(df_toPreRank.columns[1:])
+
+    # # split dataframes in a list
+    # split_df = []
+
+    # for i in range(0, col_num, 1):
+    #     split_df.append(df_toPreRank.iloc[:, [i,i+1]])
+    #     print(split_df)
         # Take dump of gene column and join with column i as dataframe
         # Stack as larger dataframe with 50 objects
         # Each object is of gene_symbol and PCi
@@ -55,11 +63,11 @@ def preRank(df_toPreRank):
 
     # To rank, iterate over entire object
     #rnk = pd.read_csv(df_toPreRank, header=None, sep='\t')
-    #print(rnk)
+    # print(rnk)
 
-    #for index, column in rnk.iteritems():
+    # for index, column in rnk.iteritems():
         #print(index, column)
-        #input()
+        # input()
 
 # def biomartConversion(gene_symbol, outfile, delim='\t'):
 #     df = pd.read_csv(gene_symbol, sep='\t')
@@ -81,6 +89,7 @@ def preRank(df_toPreRank):
 #                         filters={'ensemble_gene_id': queries})
 #     #results.to_csv(outfile, sep='\t', encoding='utf-8')
 #     print(results)
+
 
 def inputVerification(parsed_args):
     # Check if input file exists, throw warning if it does not
@@ -109,6 +118,9 @@ def main():
 
     parser.add_argument("-o", "--outfile", dest="outfile",
                         help="Output filename, should end in '.biomart.txt'")
+    
+    parser.add_argument("-pc", "--pclimit",
+                        help="Number of PCs to work with", type=int)
 
     infile, outfile = inputVerification(parser.parse_args())
 
