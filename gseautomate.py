@@ -50,6 +50,9 @@ def preRank(df_toPreRank):
     for col in df_toPreRank.columns[1:11]:
         df_pc = df_toPreRank[col]
         frames = pd.concat([df_gene_symbol, df_pc], axis=1, join='inner')
+
+        # TODO: Remove duplicate gene names from frames, keep only highest value gene
+
         #frames.rename(columns=frames.iloc[0]).drop(frames.index[0])
         #print(reduced)
 
