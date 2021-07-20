@@ -61,16 +61,16 @@ def preRank(df_toPreRank):
         # TODO: Strip header in preparation for Prerank submission
         rnk = frame
         print(rnk)
-    #     # TODO: write to new folder for each PC (output is being overwritten)
+        # TODO: write to new folder for each PC (output is being overwritten)
         for i in range(pc_limit):
-            i = 0
-            while (i < pc_limit):
-                i = i + 1
-                dirname = 'PC_%d'%(i,)
+            if (i < pc_limit):
+                if True:
+                    i += 1
+                    dirname = 'PC_%d' % (i,)
 
-                pre_res = gp.prerank(rnk=rnk, gene_sets='Reactome_2016', processes=4,
-                                    permutation_num=100, outdir='test/prerank_reactome/'+dirname, format='png', seed=6)
-                print(pre_res)
+            pre_res = gp.prerank(rnk=rnk, gene_sets='Reactome_2016', processes=4,
+                                 permutation_num=100, outdir='test/prerank_reactome/'+dirname, format='png', seed=6)
+    print(pre_res)
     return(pre_res)
 
     # df_pc = df_toPreRank.iloc[:,[0,1]]
