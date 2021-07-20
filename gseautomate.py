@@ -46,7 +46,7 @@ def preRank(df_toPreRank):
     # Return entire [[gene_column, PC1], [gene_column, PC2], [i, j]]
 
     # TODO: Update for loop to work with user input for PC limit
-    pc_limit = 11
+    pc_limit = 10
     frames = []
     for col in df_toPreRank.columns[1:pc_limit]:
         df_pc = df_toPreRank[col]
@@ -63,15 +63,15 @@ def preRank(df_toPreRank):
         print(rnk)
         # TODO: write to new folder for each PC (output is being overwritten)
         for i in range(pc_limit):
-            if (i < pc_limit):
+            if i < pc_limit:
                 if True:
                     i += 1
                     dirname = 'PC_%d' % (i,)
 
-            pre_res = gp.prerank(rnk=rnk, gene_sets='Reactome_2016', processes=4,
-                                 permutation_num=100, outdir='test/prerank_reactome/'+dirname, format='png', seed=6)
-    print(pre_res)
-    return(pre_res)
+                pre_res = gp.prerank(rnk=rnk, gene_sets='Reactome_2016', processes=4,
+                                    permutation_num=100, outdir='test/prerank_reactome/'+dirname, format='png', seed=6)
+        print(pre_res)
+        return pre_res
 
     # df_pc = df_toPreRank.iloc[:,[0,1]]
     # col_num = len(df_toPreRank.columns[1:])
