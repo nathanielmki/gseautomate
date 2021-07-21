@@ -12,6 +12,8 @@ from gseapy.parser import Biomart
 
 # Processes input file (in this case, PCA loading scores)
 # Removes ENSEMBL Identifier and reduces to gene ID
+
+
 def processID(infile, outfile, delim='\t'):
 
     # Load in gene list from data frame
@@ -34,12 +36,14 @@ def processID(infile, outfile, delim='\t'):
 
 # Takes processed dataframe as input, converts to alternative
 # gene symbol for downstream GSEA run
+
+
 def geneConversion(df_toPreRank, gdb, delim='\t'):
-    
+
     # For gene_id in df_gene_symbol,
     # Check if gene_id exists in col_2 of gdb
     # if true, replace with value in col_4 of gdb
-        # write to new df
+    # write to new df
     # if false, store in missing_df, print
     # return converted gene list for submission to Prerank
 
@@ -48,10 +52,10 @@ def geneConversion(df_toPreRank, gdb, delim='\t'):
 
     # Load in dataframe from gdb
     df = pd.read_csv(gdb, sep='\t')
+    print(df)
 
-    for gene_id in df_gene_symbol:
-        
-    
+    # for gene_id in df_gene_symbol:
+
 
 # Takes processed and converted dataframe as input,
 # running it through the Prerank function provided by gseapy
@@ -80,21 +84,18 @@ def preRank(df_toPreRank):
         # print(reduced)
 
     # To rank, iterate over entire object
+    i = 1
     for frame in frames:
         # TODO: Strip header in preparation for Prerank submission
         rnk = frame
         print(rnk)
-        # TODO: write to new folder for each PC (output is being overwritten)
-        for i in range(pc_limit):
-            if i < pc_limit:
-                if True:
-                    i += 1
-                    dirname = 'PC_%d' % (i,)
+        dirname = 'PC_%d' % (i,)
+        i += 1
 
-                pre_res = gp.prerank(rnk=rnk, gene_sets='Reactome_2016', processes=4,
-                                    permutation_num=100, outdir='test/prerank_reactome/'+dirname, format='png', seed=6)
-        print(pre_res)
-        return pre_res
+        pre_res = gp.prerank(rnk=rnk, gene_sets='Reactome_2016', processes=4,
+                             permutation_num=100, outdir='test/prerank_reactome/'+dirname, format='png', seed=6)
+        # print(pre_res)
+    return pre_res
 
     # df_pc = df_toPreRank.iloc[:,[0,1]]
     # col_num = len(df_toPreRank.columns[1:])
@@ -139,12 +140,20 @@ def inputVerification(parsed_args):
               parsed_args.infile)
         sys.exit()
 
+    # # Check if gene db file exists, throw warning if it does not
+    # gdb = parsed_args.gdb
+    # if not os.path.isfile(parsed_args.gdb):
+    #     print("The gene database file %s is missing, quitting." %
+    #           parsed_args.gdb)
+    #     sys.exit()
+
     # Auto-generate an output file name based upon checked input
     if parsed_args.outfile == '':
         outfile = infile.split('.')[-2] + '.biomart.txt'
     else:
         outfile = parsed_args.outfile
 
+    # return infile, gdb, outfile
     return infile, outfile
 
 
@@ -162,12 +171,15 @@ def main():
     parser.add_argument("-pc", "--pclimit", dest="pclimit",
                         help="Number of PCs to work with", type=int)
     # TODO: Implement this feature
-    parser.add_argument("-gdb", "--gene_database", dest="database",
+    parser.add_argument("-gdb", "--gene_database", dest="gdb",
                         help="Database to convert genes against")
 
+    #infile, gdb, outfile = inputVerification(parser.parse_args())
     infile, outfile = inputVerification(parser.parse_args())
 
     df_toPreRank = processID(infile, outfile)
+
+    #geneConversion(df_toPreRank, gdb)
 
     preRank(df_toPreRank)
 
