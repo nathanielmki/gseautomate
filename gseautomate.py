@@ -10,7 +10,8 @@ import re
 import string
 from gseapy.parser import Biomart
 
-
+# Processes input file (in this case, PCA loading scores)
+# Removes ENSEMBL Identifier and reduces to gene ID
 def processID(infile, outfile, delim='\t'):
 
     # Load in gene list from data frame
@@ -31,7 +32,22 @@ def processID(infile, outfile, delim='\t'):
     df_toPreRank = df.drop(columns=['NAME'])
     return df_toPreRank
 
+# Takes processed dataframe as input, converts to alternative
+# gene symbol for downstream GSEA run
+def geneConversion(df_toPreRank, gdb, delim='\t'):
+    
+    # Load in dataframe from processID
+    df_gene_symbol = df_toPreRank['gene_symbol']
 
+    # Load in dataframe from gdb
+    df = pd.read_csv(gdb, sep='\t')
+
+    for gene_id in df_gene_symbol:
+        
+    
+
+# Takes processed and converted dataframe as input,
+# running it through the Prerank function provided by gseapy
 def preRank(df_toPreRank):
 
     # Dump gene column as Dataframe
@@ -107,7 +123,7 @@ def preRank(df_toPreRank):
 #     #results.to_csv(outfile, sep='\t', encoding='utf-8')
 #     print(results)
 
-
+# Verifies that the initial input file exists, if not throw warning
 def inputVerification(parsed_args):
     # Check if input file exists, throw warning if it does not
     infile = parsed_args.infile
@@ -138,6 +154,9 @@ def main():
     # TODO: Implement this feature
     parser.add_argument("-pc", "--pclimit", dest="pclimit",
                         help="Number of PCs to work with", type=int)
+    # TODO: Implement this feature
+    parser.add_argument("-gdb", "--gene_database", dest="database",
+                        help="Database to convert genes against")
 
     infile, outfile = inputVerification(parser.parse_args())
 
