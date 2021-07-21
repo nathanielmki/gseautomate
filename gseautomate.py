@@ -36,6 +36,13 @@ def processID(infile, outfile, delim='\t'):
 # gene symbol for downstream GSEA run
 def geneConversion(df_toPreRank, gdb, delim='\t'):
     
+    # For gene_id in df_gene_symbol,
+    # Check if gene_id exists in col_2 of gdb
+    # if true, replace with value in col_4 of gdb
+        # write to new df
+    # if false, store in missing_df, print
+    # return converted gene list for submission to Prerank
+
     # Load in dataframe from processID
     df_gene_symbol = df_toPreRank['gene_symbol']
 
