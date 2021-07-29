@@ -73,15 +73,11 @@ def preRank(df_toPreRank):
     # Return entire [[gene_column, PC1], [gene_column, PC2], [i, j]]
 
     # TODO: Update for loop to work with user input for PC limit
-    pc_limit = 10
+    pc_limit = 11
     frames = []
     for col in df_toPreRank.columns[1:pc_limit]:
         df_pc = df_toPreRank[col]
         frames.append(pd.concat([df_gene_symbol, df_pc], axis=1, join='inner'))
-        # TODO: Remove duplicate gene names from frames, keep only highest value gene
-
-        # frames.rename(columns=frames.iloc[0]).drop(frames.index[0])
-        # print(reduced)
 
     # To rank, iterate over entire object
     i = 1
@@ -91,22 +87,13 @@ def preRank(df_toPreRank):
         print(rnk)
         dirname = 'PC_%d' % (i,)
         i += 1
+        # TODO: Remove duplicate gene names from frames, keep only highest value gene
+        #rnk.sort_values(['gene_symbol'], ascending=[False]).drop_duplicates([dirname], keep='last')
 
         pre_res = gp.prerank(rnk=rnk, gene_sets='Reactome_2016', processes=4,
                              permutation_num=100, outdir='test/prerank_reactome/'+dirname, format='png', seed=6)
         # print(pre_res)
     return pre_res
-
-    # df_pc = df_toPreRank.iloc[:,[0,1]]
-    # col_num = len(df_toPreRank.columns[1:])
-
-    # # split dataframes in a list
-    # split_df = []
-
-    # for i in range(0, col_num, 1):
-    #     split_df.append(df_toPreRank.iloc[:, [i,i+1]])
-    #     print(split_df)
-
     # Convert input ENSEMBL IDs to NCBI Entrez gene IDs
 
 
