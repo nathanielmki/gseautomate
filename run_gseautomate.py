@@ -55,7 +55,7 @@ def geneConversion(df_toPreRank, gdb, delim='\t'):
     #print(df_gdb)
 
     # for gene_id in df_gene_symbol:
-    for gene_symbol in df_gene_symbol:
+    #for gene_symbol in df_gene_symbol:
         
 
 # Takes processed and converted dataframe as input,
@@ -85,15 +85,25 @@ def preRank(df_toPreRank):
     for frame in frames:
         # TODO: Strip header in preparation for Prerank submission
         rnk = frame
+        # Remove any column in df with na value
+        rnk = frame.dropna()
+        # Remove duplicate IDs, keep highest value
+        rnk = frame.groupby('gene_symbol', as_index=False).max()
+        #rnk = frame.drop_duplicates('gene_symbol', keep='last')
         print(rnk)
         dirname = 'PC_%d' % (i,)
         i += 1
+
+        # # Run enrichr
+        # enr = gp.enrichr(gene_list=rnk,gene_sets='GeneSigDB',organism='Fish',
+        #             description='enrichr_test', outdir='test/GeneSigDB/'+dirname,
+        #             cutoff=0.5)
         # TODO: Remove duplicate gene names from frames, keep only highest value gene
         #rnk.sort_values(['gene_symbol'], ascending=[False]).drop_duplicates([dirname], keep='last')
 
-        pre_res = gp.prerank(rnk=rnk, gene_sets='Reactome_2016', processes=4,
-                             permutation_num=100, outdir='test/prerank_reactome/'+dirname, format='png', seed=6)
-        # print(pre_res)
+        pre_res = gp.prerank(rnk=rnk, gene_sets='GeneSigDB', processes=4,
+                             permutation_num=100, outdir='test/GeneSigDB/'+dirname, format='png', seed=6)
+        print(pre_res)
     return pre_res
     # Convert input ENSEMBL IDs to NCBI Entrez gene IDs
 
