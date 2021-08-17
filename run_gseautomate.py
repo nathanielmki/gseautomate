@@ -97,15 +97,15 @@ def preRank(df_toPreRank):
         dirname = 'PC_%d' % (i,)
         i += 1
 
-        # # Run enrichr
-        # enr = gp.enrichr(gene_list=rnk,gene_sets='GeneSigDB',organism='Fish',
-        #             description='enrichr_test', outdir='test/GeneSigDB/'+dirname,
-        #             cutoff=0.5)
-        # TODO: Remove duplicate gene names from frames, keep only highest value gene
+        # Run enrichr
+        enr = gp.enrichr(gene_list=rnk,gene_sets='KEGG_2019',organism='Fish',
+                    description='enrichr_test', outdir='test/KEGG_2019/'+dirname,
+                    cutoff=0.5)
+        #TODO: Remove duplicate gene names from frames, keep only highest value gene
         #rnk.sort_values(['gene_symbol'], ascending=[False]).drop_duplicates([dirname], keep='last')
 
-        pre_res = gp.prerank(rnk=rnk, gene_sets='KEGG_2016', processes=4,
-                             permutation_num=100, outdir='test/KEGG_2016/'+dirname, format='png', seed=6)
+        pre_res = gp.prerank(rnk=rnk, gene_sets='KEGG_2019', processes=4,
+                             permutation_num=100, outdir='test/KEGG_2019/'+dirname, format='png', seed=6)
         print(pre_res)
     return pre_res
     # Convert input ENSEMBL IDs to NCBI Entrez gene IDs
