@@ -8,6 +8,8 @@ import os
 import csv
 import re
 import string
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 from gseapy.parser import Biomart
 
 # Processes input file (in this case, PCA loading scores)
@@ -88,7 +90,7 @@ def preRank(df_toPreRank):
         # TODO: Strip header in preparation for Prerank submission
         rnk = frame
         # Convert all gene_symbol to lowercase
-        rnk = frame['gene_symbol'].str.lower()
+        #rnk = frame['gene_symbol'].str.lower()
         # Remove any column in df with na value
         rnk = frame.dropna()
         # Remove duplicate IDs, keep highest value
@@ -96,15 +98,25 @@ def preRank(df_toPreRank):
         print(rnk)
         dirname = 'PC_%d' % (i,)
         i += 1
+        # Print out additional info on each Frame
+        #print(frame.info())
+        #print(frame.describe())
 
-        # Run enrichr
-        enr = gp.enrichr(gene_list=rnk,gene_sets='KEGG_2019',organism='Fish',
-                    description='enrichr_test', outdir='test/KEGG_2019/'+dirname,
-                    cutoff=0.5)
+        # # Run enrichr
+        # enr = gp.enrichr(gene_list=rnk,gene_sets='KEGG_2019',organism='Fish',
+        #             description='enrichr_test', outdir='test/KEGG_2019/'+dirname,
+        #             cutoff=0.5)
+
+        # Get libraries you'd like to use
+        gss = gp.get_library_name(organism='Fish')
+
+        # Add support for defining organism dataset to be used  
+        gmt_dict = gp.parser.gsea_gmt_parser('/home/nathanielmki/.cache/gseapy/enrichr.KEGG_2019.gmt', organism='Fish')
+
         #TODO: Remove duplicate gene names from frames, keep only highest value gene
         #rnk.sort_values(['gene_symbol'], ascending=[False]).drop_duplicates([dirname], keep='last')
 
-        pre_res = gp.prerank(rnk=rnk, gene_sets='KEGG_2019', processes=4,
+        pre_res = gp.prerank(rnk=rnk, gene_sets=gmt_dict, processes=4,
                              permutation_num=100, outdir='test/KEGG_2019/'+dirname, format='png', seed=6)
         print(pre_res)
     return pre_res
