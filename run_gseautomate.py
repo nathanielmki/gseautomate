@@ -89,8 +89,8 @@ def preRank(df_toPreRank):
     for frame in frames:
         # TODO: Strip header in preparation for Prerank submission
         rnk = frame
-        # Convert all gene_symbol to lowercase
-        #rnk = frame['gene_symbol'].str.lower()
+        # Convert all gene_symbol to uppercase
+        rnk = frame['gene_symbol'].str.upper()
         # Remove any column in df with na value
         rnk = frame.dropna()
         # Remove duplicate IDs, keep highest value
