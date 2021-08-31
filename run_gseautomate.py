@@ -1,3 +1,4 @@
+from gseapy.parser import Biomart
 import pandas as pd
 import gseapy as gp
 import matplotlib.pyplot as plt
@@ -10,7 +11,6 @@ import re
 import string
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-from gseapy.parser import Biomart
 
 # Processes input file (in this case, PCA loading scores)
 # Removes ENSEMBL Identifier and reduces to gene ID
@@ -57,15 +57,12 @@ def geneConversion(df_toPreRank, gdb, delim='\t'):
     #print(df_gdb)
 
     #for gene_symbol in df_gene_symbol:
-        
+
 
 # Takes processed and converted dataframe as input,
 # running it through the Prerank function provided by gseapy
 def preRank(df_toPreRank):
 
-    # Set enrichr database, can choose from Human, Mouse, Yeast, Fly, Fish, Worm)
-    #names = gp.get_library_name(database='Fish')
-    #names
     # Dump gene column as Dataframe
     df_gene_symbol = df_toPreRank['gene_symbol']
 
@@ -98,31 +95,20 @@ def preRank(df_toPreRank):
         print(rnk)
         dirname = 'PC_%d' % (i,)
         i += 1
-        # Print out additional info on each Frame
-        #print(frame.info())
-        #print(frame.describe())
 
-        # # Run enrichr
-        # enr = gp.enrichr(gene_list=rnk,gene_sets='KEGG_2019',organism='Fish',
-        #             description='enrichr_test', outdir='test/KEGG_2019/'+dirname,
-        #             cutoff=0.5)
-
-        # Get libraries you'd like to use
+        # Set enrichr database, can choose from Human, Mouse, Yeast, Fly, Fish, Worm)
         gss = gp.get_library_name(organism='Fish')
 
-        # Add support for defining organism dataset to be used  
-        gmt_dict = gp.parser.gsea_gmt_parser('/home/nathanielmki/.cache/gseapy/enrichr.KEGG_2019.gmt', organism='Fish')
-
-        #TODO: Remove duplicate gene names from frames, keep only highest value gene
-        #rnk.sort_values(['gene_symbol'], ascending=[False]).drop_duplicates([dirname], keep='last')
+        # Add support for defining organism dataset to be used
+        gmt_dict = gp.parser.gsea_gmt_parser(
+            '/Users/nathanielmaki/.cache/gseapy/enrichr.KEGG_2019.gmt', organism='Fish')
 
         pre_res = gp.prerank(rnk=rnk, gene_sets=gmt_dict, processes=4,
                              permutation_num=100, outdir='test/KEGG_2019/'+dirname, format='png', seed=6)
         print(pre_res)
     return pre_res
-    # Convert input ENSEMBL IDs to NCBI Entrez gene IDs
 
-
+# Convert input ENSEMBL IDs to NCBI Entrez gene IDs
 # def biomartConversion(gene_symbol, delim='\t'):
 #     df = pd.read_csv(gene_symbol, sep='\t')
 #     bm = Biomart()
@@ -145,6 +131,8 @@ def preRank(df_toPreRank):
 #     print(results)
 
 # Verifies that the initial input file exists, if not throw warning
+
+
 def inputVerification(parsed_args):
     # Check if input file exists, throw warning if it does not
     infile = parsed_args.infile
@@ -180,14 +168,17 @@ def main():
 
     parser.add_argument("-o", "--outfile", dest="outfile",
                         help="Output filename, should end in '.biomart.txt'")
+
     # TODO: Implement this feature
     parser.add_argument("-pc", "--pclimit", dest="pclimit",
                         help="Number of PCs to work with", type=int)
+
     # TODO: Implement this feature
     parser.add_argument("-gdb", "--gene_database", dest="gdb",
                         help="Database to convert genes against")
 
     #infile, gdb, outfile = inputVerification(parser.parse_args())
+
     infile, outfile = inputVerification(parser.parse_args())
 
     df_toPreRank = processID(infile, outfile)
