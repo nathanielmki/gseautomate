@@ -61,7 +61,7 @@ def geneConversion(df_toPreRank, gdb, delim='\t'):
 
 # Takes processed and converted dataframe as input,
 # running it through the Prerank function provided by gseapy
-def preRank(df_toPreRank):
+def preRank(df_toPreRank, pc_limit):
 
     # Dump gene column as Dataframe
     df_gene_symbol = df_toPreRank['gene_symbol']
@@ -75,7 +75,7 @@ def preRank(df_toPreRank):
     # Return entire [[gene_column, PC1], [gene_column, PC2], [i, j]]
 
     # TODO: Update for loop to work with user input for PC limit
-    pc_limit = 11
+    #pc_limit = 11
     frames = []
     for col in df_toPreRank.columns[1:pc_limit]:
         df_pc = df_toPreRank[col]
@@ -84,7 +84,6 @@ def preRank(df_toPreRank):
     # To rank, iterate over entire object
     i = 1
     for frame in frames:
-        # TODO: Strip header in preparation for Prerank submission
         rnk = frame
         # Convert all gene_symbol to uppercase
         rnk = frame['gene_symbol'].str.upper()
@@ -101,10 +100,10 @@ def preRank(df_toPreRank):
 
         # Add support for defining organism dataset to be used
         gmt_dict = gp.parser.gsea_gmt_parser(
-            '/Users/nathanielmaki/.cache/gseapy/enrichr.KEGG_2019.gmt', organism='Fish')
+            '/Users/nathanielmaki/.cache/gseapy/enrichr.GO_Biological_Process_2018.gmt', organism='Fish')
 
         pre_res = gp.prerank(rnk=rnk, gene_sets=gmt_dict, processes=4,
-                             permutation_num=100, outdir='test/KEGG_2019/'+dirname, format='png', seed=6)
+                             permutation_num=100, outdir='test/GO_Biological_Process_2018/'+dirname, format='png', seed=6)
         print(pre_res)
     return pre_res
 
@@ -170,7 +169,7 @@ def main():
                         help="Output filename, should end in '.biomart.txt'")
 
     # TODO: Implement this feature
-    parser.add_argument("-pc", "--pclimit", dest="pclimit",
+    parser.add_argument("-pc", "--pc_limit", dest="pc_limit",
                         help="Number of PCs to work with", type=int)
 
     # TODO: Implement this feature
@@ -185,7 +184,9 @@ def main():
 
     #geneConversion(df_toPreRank, gdb)
 
-    preRank(df_toPreRank)
+    pc_limit = preRank(pc_limit)
+
+    preRank(df_toPreRank, pc_limit)
 
 
 if __name__ == '__main__':
