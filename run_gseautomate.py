@@ -168,7 +168,6 @@ def main():
     parser.add_argument("-o", "--outfile", dest="outfile",
                         help="Output filename, should end in '.biomart.txt'")
 
-    # TODO: Implement this feature
     parser.add_argument("-pc", "--pc_limit", dest="pc_limit",
                         help="Number of PCs to work with", type=int)
 
@@ -184,9 +183,9 @@ def main():
 
     #geneConversion(df_toPreRank, gdb)
 
-    pc_limit = preRank(pc_limit)
+    args = parser.parse_args()
 
-    preRank(df_toPreRank, pc_limit)
+    preRank(df_toPreRank, args.pc_limit)
 
 
 if __name__ == '__main__':
