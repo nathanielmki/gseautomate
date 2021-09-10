@@ -102,6 +102,7 @@ def preRank(df_toPreRank, pc_limit):
         gmt_dict = gp.parser.gsea_gmt_parser(
             '/Users/nathanielmaki/.cache/gseapy/enrichr.GO_Biological_Process_2018.gmt', organism='Fish')
 
+        # TODO: Update to larger default image number (20 to 50)
         pre_res = gp.prerank(rnk=rnk, gene_sets=gmt_dict, processes=4,
                              permutation_num=100, outdir='test/GO_Biological_Process_2018/'+dirname, format='png', seed=6)
         print(pre_res)
