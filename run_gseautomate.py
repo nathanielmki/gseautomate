@@ -3,12 +3,8 @@ import pandas as pd
 import gseapy as gp
 import matplotlib.pyplot as plt
 import argparse
-import json
 import sys
 import os
-import csv
-import re
-import string
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -108,31 +104,7 @@ def preRank(df_toPreRank, pc_limit):
         print(pre_res)
     return pre_res
 
-# Convert input ENSEMBL IDs to NCBI Entrez gene IDs
-# def biomartConversion(gene_symbol, delim='\t'):
-#     df = pd.read_csv(gene_symbol, sep='\t')
-#     bm = Biomart()
-#     # View validated marts
-#     marts = bm.get_marts()
-#     # View validated dataset
-#     datasets = bm.get_datasets(mart='ENSEMBL_MART_ENSEMBL')
-#     # View validated attributes
-#     attrs = bm.get_attributes(dataset='drerio_gene_ensembl')
-#     # View validated filters
-#     filters = bm.get_filters(dataset='drerio_gene_ensembl')
-#     # Pull out column 1 as list to feed to Biomart
-#     col_one_list = df['NAME'].tolist()
-#     # print(col_one_list)
-#     # Query results
-#     queries = col_one_list
-#     results = bm.query(dataset='drerio_gene_ensembl', attributes=['ensembl_gene_id', 'external_gene_name', 'entrezgene_id', 'go_id'],
-#                        filters={'ensemble_gene_id': queries})
-#     #results.to_csv(outfile, sep='\t', encoding='utf-8')
-#     print(results)
-
 # Verifies that the initial input file exists, if not throw warning
-
-
 def inputVerification(parsed_args):
     # Check if input file exists, throw warning if it does not
     infile = parsed_args.infile
