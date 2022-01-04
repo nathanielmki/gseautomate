@@ -36,7 +36,7 @@ def processID(infile, delim='\t'):
 # running it through the Prerank function provided by gseapy
 
 
-def preRank(df_toPreRank, pc_limit, library, organism):
+def preRank(df_toPreRank, col_limit, library, organism):
 
     # Dump gene column as Dataframe
     df_gene_symbol = df_toPreRank['gene_symbol']
@@ -52,7 +52,7 @@ def preRank(df_toPreRank, pc_limit, library, organism):
     # TODO: change to work with "col_limit", simplify, test with DESeq2 output
 
     frames = []
-    for col in df_toPreRank.columns[1:pc_limit]:
+    for col in df_toPreRank.columns[1:col_limit]:
         df_pc = df_toPreRank[col]
         frames.append(pd.concat([df_gene_symbol, df_pc], axis=1, join='inner'))
 
@@ -108,8 +108,8 @@ def main():
     parser.add_argument("-o", "--outfile", dest="outfile",
                         help="Output filename")
 
-    parser.add_argument("-pc", "--pc_limit", dest="pc_limit",
-                        help="Number of PCs to work with", type=int)
+    parser.add_argument("-cl", "--col_limit", dest="col_limit",
+                        help="Number of columns to parse through", type=int)
 
     parser.add_argument("-lib", "--library", dest="library",
                         help="Enrichr library to pull from")
@@ -123,7 +123,7 @@ def main():
 
     args = parser.parse_args()
 
-    preRank(df_toPreRank, args.library, args.organism, args.pc_limit)
+    preRank(df_toPreRank, args.col_limit, args.library, args.organism)
 
 
 if __name__ == '__main__':
