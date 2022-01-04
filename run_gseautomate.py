@@ -50,7 +50,6 @@ def preRank(df_toPreRank, pc_limit, library, organism):
     # Return entire [[gene_column, PC1], [gene_column, PC2], [i, j]]
 
     # TODO: change to work with "col_limit", simplify, test with DESeq2 output
-    #pc_limit = 11
 
     frames = []
     for col in df_toPreRank.columns[1:pc_limit]:
@@ -76,12 +75,13 @@ def preRank(df_toPreRank, pc_limit, library, organism):
         i += 1
 
         # Add support for defining organism dataset to be used
-        # gmt_dict = gp.parser.gsea_gmt_parser(
-        #     '/Users/nathanielmaki/.cache/gseapy/enrichr.GO_Biological_Process_2018.gmt', organism='Fish')
-        gmt_dict = gp.parser.gsea_gmt_parser(library, organism)
+        gmt_dict = gp.parser.gsea_gmt_parser(
+             '/Users/nathanielmaki/.cache/gseapy/enrichr.GO_Biological_Process_2018.gmt', organism='Fish')
+        
+        #gmt_dict = gp.parser.gsea_gmt_parser(library, organism)
 
         pre_res = gp.prerank(rnk=rnk, gene_sets=gmt_dict, processes=4,
-                             permutation_num=100, outdir='./'+dirname, format='png', seed=6)
+                             permutation_num=100, outdir='./GO_Biological_Process_2018/'+dirname, format='png', seed=6)
         print(pre_res)
     return pre_res
 
@@ -106,20 +106,20 @@ def main():
                         help="Input gene list, acquired from DESeq2, PCA, etc")
 
     parser.add_argument("-o", "--outfile", dest="outfile",
-                        help="Output filename, should end in '.biomart.txt'")
+                        help="Output filename")
 
     parser.add_argument("-pc", "--pc_limit", dest="pc_limit",
                         help="Number of PCs to work with", type=int)
 
-    parser.add_argument("-lib", "--library", required=True, dest="library",
+    parser.add_argument("-lib", "--library", dest="library",
                         help="Enrichr library to pull from")
 
-    parser.add_argument("-org", "--organism", required=True, dest="organism",
+    parser.add_argument("-org", "--organism", dest="organism",
                         help="Organism to pull enrichr library for")
 
-    infile, outfile = inputVerification(parser.parse_args())
+    infile = inputVerification(parser.parse_args())
 
-    df_toPreRank = processID(infile, outfile)
+    df_toPreRank = processID(infile)
 
     args = parser.parse_args()
 
