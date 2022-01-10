@@ -15,6 +15,6 @@ An example execution:
 
 ```python3 ~/Documents/Github/mdibl/gseautomate/run_gseautomate.py -i jcoffman.meta.wt-Q2_full.DESeq2_out.tsv -cl 11```
 
-* Use the -i argument for the supplied file, and -cl for the number of columns to iterate through (n+1 more than you need, as index column counts).
+* Use the `-i` argument for the supplied file, and `-cl` for the number of columns to iterate through (n+1 more than you need, as index column counts).
 
-* The only `required` input is the actual file itself. No -cl argument will cause gseautomate to iterate through all columns of your file.
+* The only `required` input is the actual file itself. No `-cl` argument will cause gseautomate to iterate through all columns of your file.
