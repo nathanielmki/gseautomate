@@ -17,8 +17,9 @@ def processID(infile, delim='\t'):
     # Load in gene list from data frame
     df = pd.read_csv(infile, sep='\t')
 
-    # Set Index Name
-    df.rename(columns={"": "NAME"}, inplace=True)
+    # Give column 0 an intermediary ID
+    df.rename(columns={list(df)[0]: "NAME"}, inplace=True)
+    print(df)
 
     # Reduce gene ID to gene symbol, removing ENSEMBL flag (preceded ID by a _ )
     df['gene_symbol'] = df['NAME'].str.split('_').str[1]
@@ -28,8 +29,9 @@ def processID(infile, delim='\t'):
     cols = [cols[-1]] + cols[:-1]
     df = df[cols]
 
-    # Drop redundant second column containing ENSEMBL IDs and gene symbols
+    # Drop redundant second column containing ENSEMBL IDs combined with gene symbols
     df_toPreRank = df.drop(columns=['NAME'])
+    print(df)
     return df_toPreRank
 
 # Takes processed and converted dataframe as input,
@@ -53,8 +55,8 @@ def preRank(df_toPreRank, col_limit, library, organism):
 
     frames = []
     for col in df_toPreRank.columns[1:col_limit]:
-        df_pc = df_toPreRank[col]
-        frames.append(pd.concat([df_gene_symbol, df_pc], axis=1, join='inner'))
+        df_col = df_toPreRank[col]
+        frames.append(pd.concat([df_gene_symbol, df_col], axis=1, join='inner'))
 
     # To rank, iterate over entire object
     i = 1
@@ -71,7 +73,7 @@ def preRank(df_toPreRank, col_limit, library, organism):
         rnk = frame.groupby('gene_symbol', as_index=False).max()
 
         print(rnk)
-        dirname = 'PC_%d' % (i,)
+        dirname = 'col_%d' % (i,)
         i += 1
 
         # Add support for defining organism dataset to be used
@@ -105,8 +107,8 @@ def main():
     parser.add_argument("-i", "--infile", required=True, dest="infile",
                         help="Input gene list, acquired from DESeq2, PCA, etc")
 
-    parser.add_argument("-o", "--outfile", dest="outfile",
-                        help="Output filename")
+    #parser.add_argument("-o", "--outfile", dest="outfile",
+                        #help="Output filename")
 
     parser.add_argument("-cl", "--col_limit", dest="col_limit",
                         help="Number of columns to parse through", type=int)
