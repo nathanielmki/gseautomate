@@ -9,6 +9,14 @@ This utility will iterate through each column of your supplied file together wit
 
 There are a few bugs with user-provided library and organism IDs, for the moment they need to be changed manually, and the organism-specific library sourced from ENRICHR.
 
+## Requirements
+
+To properly use this software you'll need to acquire the required library files from the Enrichr [website](https://maayanlab.cloud/Enrichr/).
+
+From the bottom of the page, select the organism specific database to work with (FlyEnrichr, etc), follow the `Libraries` link, and download the desired library.
+
+Then move the library file into the `~/.cache/gseapy` directory. If it does not exist, please create it.
+
 ## Usage
 
 An example execution:
