@@ -79,7 +79,7 @@ def preRank(df_toPreRank, col_limit, library, organism):
 
         # Add support for defining organism dataset to be used
         gmt_dict = gp.parser.gsea_gmt_parser(
-             '/Users/nathanielmaki/.cache/gseapy/enrichr.KEGG_2019.gmt', organism='Fish')
+             '/home/nathanielmki/.cache/gseapy/enrichr.KEGG_2019.gmt', organism='Fish')
         
         #gmt_dict = gp.parser.gsea_gmt_parser(library, organism)
 
