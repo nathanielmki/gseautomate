@@ -52,7 +52,6 @@ def preRank(df_toPreRank, col_limit, library, organism):
     frames = []
 
     column_headers = list(df_toPreRank.columns.values)
-    print(column_headers)
 
     for col in df_toPreRank.columns[1:col_limit]:
         df_col = df_toPreRank[col]
