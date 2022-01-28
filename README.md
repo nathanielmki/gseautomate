@@ -3,7 +3,7 @@
 
 ## Introduction
 
-gseautomate acts as a functional wrapper around the GSEApy python package, extending it's functionality. Utilizing Pandas, users are able to supply any gene matrix file, assuming that the gene column is in ENSEMBL format (required for preprocessing).
+gseautomate is a wrapper around the GSEApy python package, adding to it's functionality. Utilizing Pandas, users are able to supply any gene matrix file, assuming that the gene column is in ENSEMBL format (required for preprocessing).
 
 This utility will iterate through each column of your supplied file together with the gene ID, and submits it to GSEApy. It generates a simple named output (col_1, etc) underneath the library directory from GSEA that it was ran against.
 
